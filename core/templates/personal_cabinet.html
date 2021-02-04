@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center mt-5">
+        <div class="col-md-7 mb-1 mt-1 text-white text-center ">
+            <div class="container">
+                <h1 class="jumbotron-heading">Личный кабинет</h1>
+                <p class="lead">Страница содержит персональные данные</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-3">
+
+        <div class="card">
+            {% if message %}
+                <div class="container  justify-content-center mt-2 mb-2">
+                    <div class="card text-center text-dark text-bold">
+                        <h5>
+                            {{ message }}
+                        </h5>
+                    </div>     
+                </div>
+                {% endif %}
+            <div class="card-body mr-3">
+                
+                <h4 class="card-title">{{ user.Name }}</h4>
+
+                <p id="name_email" class="card-text text-dark mx-2 border-bottom container">Имя: {{ user.Name }}</p>
+                <p id="name_FIO" class="card-text text-dark mx-2 border-bottom container">Почта: {{ user.Email }}</p>
+
+                <a id="chagne_btn" href="" data-toggle="modal" data-target="#chagne_user"
+                    class="btn btn-primary btn-xs pull-left add-elem">Изменить
+                </a>
+                <a  href="{% url 'sign_in' %}"
+                    class="btn btn-outline-info btn-xs ml-2 pull-left add-elem">Выход
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <form id="form_protrocol" class="add-form" data-db="records" method="POST">
+        <div id="chagne_user" class="modal" tabindex="0" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create diagnos</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body container d-flex flex-column">
+                        {% csrf_token %} 
+                        {{ form }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                        <button type="submit" class="btn btn-primary" name="createDi">Изменить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <script>
+
+        $(document).ready(function() {
+            $('#diagn_table').DataTable({
+                "aLengthMenu": [
+                    [5, 10, 25, -1],
+                    [5, 10, 25, "All"]
+                ]
+            });
+        });
+
+    </script>
+    <style>
+        body.modal-open {
+            overflow: auto;
+        }
+
+        body.modal-open[style] {
+            padding-right: 0px !important;
+        }
+
+        .modal::-webkit-scrollbar {
+            width: 0 !important;
+            /*removes the scrollbar but still scrollable*/
+            /* reference: http://stackoverflow.com/a/26500272/2259400 */
+        }
+
+        table {
+            width: 100%;
+        }
+
+        #treatment_table_filter {
+            float: right;
+        }
+
+        #diagn_table_paginate {
+            float: right;
+        }
+
+        #diagn_table_length {
+            float: left;
+        }
+
+        #diagn_table_length label {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+
+        #diagn_table_length select {
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
+        #diagn_table_filter label {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        #diagn_table_filter input {
+            margin-left: 10px;
+        }
+
+        .add-elem {
+            margin-top: 10px;
+        }
+
+        .back-to-top {
+            cursor: pointer;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+        }
+    </style>
+{% endblock %}
+    
+

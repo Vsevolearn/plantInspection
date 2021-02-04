@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block title %}Библиотека{% endblock %}
+
+{% block content %} 
+
+<div class="pricing-header px-3 py-3 pt-md-4 pb-md-2 mx-auto text-center text-white">
+    <h1 class="display-5 font-weight-bold">Библиотека</h1>
+    <p class="lead">Содержит коллекцию вредителей и угроз, которые могут быть распознаны.</p>
+</div>
+
+<div class="container mt-3">
+    <div class="card">
+        <div class="card-body ">
+            <form id="form_add" class="add-form" data-db="records" method="POST">
+                
+                <div class="container modal-body d-flex flex-column">
+                    {% csrf_token %} 
+                    <div class="row justify-content-between mb-3">
+                        <div class="col-sm text-start">
+                            <h5 >Поиск</h5>
+                        </div>
+                        <div class="col-sm  container d-flex flex-column ">
+                            <div class="row justify-content-end">
+                                <div class="col-sm mb-2">
+                                    <h7>
+                                        {{ CategoryForm.idCategory.label }}:
+                                    </h7>
+                                    {{ CategoryForm.idCategory }}
+                                </div>
+                                
+                                <div class="col-sm mb-2">
+                                    <h7>
+                                        {{ CategoryForm.idGenus.label }}:
+                                    </h7>
+                                    {{ CategoryForm.idGenus }}
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="row ">
+                        <div class="col-sm ">
+                            <div class="input-group">
+                                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                                    aria-describedby="search-addon" />
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="container mt-5">
+    {% for Exemplar in Exemplars %}
+    <div class="row mb-2">
+        <div class="col-md-6">
+            <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                <div class="card-body d-flex flex-column align-items-start" style="height: 250px;">
+                  <h3 class="mb-0">
+                    <h5 class="text-dark mytext">{{Exemplar.0.0.Name}}</h5>
+                  </h3>
+                  <p class="card-text mb-auto mytext"><span class="font-weight-bold">Вид:</span> {{Exemplar.0.0.Genus}}</p>
+
+                  <p class="card-text mb-auto mytext" ><span class="font-weight-bold">{{Exemplar.0.0.Category.Signature}}:</span> 
+                    {% for elem in Exemplar.0.1 %}
+                    {{elem.Name}};
+                    {% endfor %}
+                  </p>
+                  <p class="card-text mb-auto mytext"><span class="font-weight-bold">Описание:</span> {{Exemplar.0.0.Description}}</p>
+                  
+                  {% if login %}
+                    <a href="{% url 'exemplar_pers_page' login Exemplar.0.0.id PageCurrent %}">Подробнее</a>
+                  {% else %}
+                    <a href="{% url 'exemplar_base_page' Exemplar.0.0.id PageCurrent %}">Подробнее</a>
+                  {% endif %}
+
+                </div>
+                <img class="card-img-title flex-auto d-none d-md-block rounded-right"  alt="{{Exemplar.0.Name}}" style="width: 250px; height: 250px;" src="{{Exemplar.0.0.image.url}}" data-holder-rendered="true">
+            </div> 
+        </div>
+        {% if Exemplar.1 %}
+        <div class="col-md-6 pl-2">
+            <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                <div class="card-body d-flex flex-column align-items-start" style="height: 250px;">
+                  <h3 class="mb-0">
+                    <h5 class="text-dark mytext">{{Exemplar.1.0.Name}}</h5>
+                  </h3>
+                  <p class="card-text mb-auto mytext"><span class="font-weight-bold">Вид:</span> {{Exemplar.1.0.Genus}}</p>
+
+                  <p class="card-text mb-auto mytext" ><span class="font-weight-bold">{{Exemplar.1.0.Category.Signature}}:</span> 
+                    {% for elem in Exemplar.1.1 %}
+                        {{elem.Name}};
+                    {% endfor %}
+                  </p>
+                  <p class="card-text mb-auto mytext"><span class="font-weight-bold">Описание:</span> {{Exemplar.1.0.Description}}</p>
+                  {% if login %}
+                    <a href="{% url 'exemplar_pers_page' login Exemplar.1.0.id PageCurrent %}">Подробнее</a>
+                  {% else %}
+                    <a href="{% url 'exemplar_base_page' Exemplar.1.0.id PageCurrent %}">Подробнее</a>
+                  {% endif %}
+                  
+
+
+                </div>
+                <img class="card-img-title flex-auto d-none d-md-block rounded-right"  alt="{{Exemplar.1.Name}}" style="width: 250px; height: 250px;" src="{{Exemplar.1.0.image.url}}" data-holder-rendered="true">
+            </div> 
+        </div>
+        {% endif %}
+        
+
+    </div>
+    {% endfor %}
+</div>
+
+<div class="container  flex ">
+    <nav aria-label="sfg" class="  bg-light rounded" >
+        <ul class="pagination  justify-content-end p-2" >
+          
+            {% if login %}
+                {% if PageCurrent == 1 %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="{% url 'library_pers_page' login PagePrevious %}" >Назад</a>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'library_pers_page' login PagePrevious %}" >Назад</a>
+                </li>
+                {% endif %}
+            {% else %}
+                {% if PageCurrent == 1 %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="{% url 'library_base_page' PagePrevious %}" >Назад</a>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'library_base_page' PagePrevious %}" >Назад</a>
+                </li>
+                {% endif %}
+            {% endif %}
+          
+
+            {% if login %}
+                {% for page in Pages %}
+                    {% if page == PageCurrent %}
+                        <li class="page-item active text" aria-current="page"><a class="page-link" href="{% url 'library_pers_page' login page %}">{{page}}</span></a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="{% url 'library_pers_page' login page %}">{{page}}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {% for page in Pages %}
+                    {% if page == PageCurrent %}
+                    <li class="page-item active text" aria-current="page"><a class="page-link" href="{% url 'library_base_page' page %}">{{page}}</span></a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="{% url 'library_base_page' page %}">{{page}}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            
+            {% if login %}
+                {% if PageCurrent == PageCount %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="{% url 'library_pers_page' login PageNext %}">Вперед</a>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'library_pers_page' login PageNext %}">Вперед</a>
+                </li>
+                {% endif %}
+            {% else %}
+                {% if PageCurrent == PageCount %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="{% url 'library_base_page' PageNext %}">Вперед</a>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'library_base_page' PageNext %}">Вперед</a>
+                </li>
+                {% endif %}
+            {% endif %}
+
+
+          
+        </ul>
+    </nav>
+</div>
+
+
+<script>
+    $(document).ready(function() {
+        $('#id_idCategory').select2({
+            dropdownParent: $("#form_add")
+        });
+
+        $('#id_idGenus').select2({
+            dropdownParent: $("#form_add")
+        });
+    });
+
+</script>
+
+
+<style>
+.mytext {
+    margin: 0;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
+
+{% endblock %}
+

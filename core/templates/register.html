@@ -1,0 +1,67 @@
+ 
+{% extends 'base.html' %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+
+<div class="container  justify-content-center">
+    <div class="container mt-5 justify-content-center">
+        <div class="row justify-content-center">
+            <div class="col-md-6 card">
+                {% if message %}
+                <div class="container  justify-content-center mt-2 mb-2">
+                    <div class="card text-center text-dark text-bold">
+                        <h5>
+                            {{ message }}
+                        </h5>
+                    </div>     
+                </div>
+                {% endif %} {% if message %}
+                <div class="container  justify-content-center mt-2 mb-2">
+                    <div class="card text-center text-dark text-bold">
+                        <h5>
+                            {{ message }}
+                        </h5>
+                    </div>     
+                </div>
+                {% endif %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row justify-content-center mt-5 mb-5">
+                        <div class="col-6 text-center">
+                            <form>
+                                <h2 class="signinText" style="text-align: center;">Регистрация</h2>
+                                <div class="form-group" style="text-align: left;">
+                                    <label for="login">Имя:</label>  
+                                    {{ form.login }}
+                                </div>
+                                <div class="form-group" style="text-align: left;">
+                                    <label class='' for="exampleInputPassword1" style="text-align: left;">Пароль:</label> 
+                                    {{ form.password }}
+                                </div>
+                                <div class="form-group" style="text-align: left;">
+                                    <label class='' for="exampleInputPassword1" style="text-align: left;">Пароль (подтверждение):</label> 
+                                    {{ form.rePassword }}
+                                </div>
+                                <div class="button" style="text-align:center">
+                                    <button type="submit" class="mb-3 btn btn btn-outline-success">Вход</button>
+                                </div>
+                                <div class="">
+                                    <a  href="{% url 'sign_in'%}" class="text-dark font-weight-bold">
+                                        Назад
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div> 
+                </form>
+                
+            </div>
+    
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

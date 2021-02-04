@@ -1,0 +1,726 @@
+{% extends 'base.html' %}
+
+
+
+{% block title %}Экземпляр{% endblock %}
+
+
+{% block content %}
+
+
+<a type="button" rel="tooltip" href="{% url 'protocols' login %}" class="ml-3 mt-2 h5 text-white" data-original-title="" title="">&#8592; назад (Протоколы)</a>
+
+<div class="pricing-header px-3 py-3 pt-md-4 pb-md-2 mx-auto text-center text-white">
+    <h2 class="display-6 font-weight-bold">Протокол</h2>
+</div>
+
+<!-- Данные описания протокола -->
+<div class="container mt-3">
+    <div class="card">
+        <div id="dataprog" class="card-header">{{prot.Date}}</div>
+        <div class="card-body ">
+            <div class="container">
+                <p class="card-text mb-auto">
+                    <span class="font-weight-bold">Адрес:</span> 
+                    {{prot.Address}}</p>
+                <p class="card-text mb-auto">
+                    <span class="font-weight-bold">Координаты:</span> 
+                    {{prot.Сoordinates}}</p>
+                <p class="card-text mb-auto">
+                    <span class="font-weight-bold">Описание:</span> 
+                    {{prot.Description}}</p>    
+                
+                <p class="card-text mb-auto">
+                        <span class="font-weight-bold">Отчет:</span> 
+                        {{prot.Note}}</p>  
+                
+                <div class="row justify-content-start mt-2">
+                    <div class="col-2">
+                        <a id="chagne_btn" href="" data-toggle="modal" data-target="#chagne_user"
+                        class="btn btn-outline-dark btn-xs pull-left add-elem">Изменить
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="form_protrocol" class="add-form" data-db="records" method="POST">
+    <div id="chagne_user" class="modal" tabindex="0" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Данные протокола</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body container d-flex flex-column">
+                    {% csrf_token %} 
+                    {{ protForm }}
+                     
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary" name="createDi">Изменить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- Файл -->
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">Загрузка архива</div>
+        <div class="card-body ">
+            <div class="container">
+                <p id ="file_name" class="card-text mb-auto">
+                    <span class="font-weight-bold">Архив:</span>
+                    {% if prot.Archive %}
+                        {{prot.Archive}}
+                    {% else %}
+                        Не загружен
+                    {% endif %}</p> 
+                <div id="file_progress" class="progress">
+                    <div
+                      id="file_progress_elem"
+                      class="progress-bar"
+                      role="progressbar"
+                      style="width: 0%"
+                      aria-valuenow="0"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    ></div>
+                </div>
+
+                <div class="row justify-content-start mt-2">
+                    <div class="col-2">
+                        {% if prot.Archive %}
+                        <a id="chagne_btn" href="" data-toggle="modal" data-target="#file_user"
+                            class="btn btn-outline-dark btn-xs pull-left add-elem">Изменить
+                        </a>
+                        {% else %}
+                        <a id="chagne_btn" href="" data-toggle="modal" data-target="#file_user"
+                            class="btn btn-outline-dark btn-xs pull-left add-elem">Загрузить
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="form_protrocol" class="file-form" data-db="records" method="POST">
+    <div id="file_user" class="modal" tabindex="0" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Выбрать файл</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body container d-flex flex-column">
+                    {% csrf_token %} 
+                    <input type="text" name="id" value="{{id}}" class="form-control" required="" id="id_date" hidden>
+                    <div class="container">
+                        <input type="file" class="form-control" id="customFile" required name="myfile"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary" name="createDi">Загрузить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<!-- Параметры поиска -->
+<div class="container mt-3">
+    <div class="card">
+        <div class="card-header">Параметры поиска</div>
+        <div class="card-body mt-1">
+            <div class="container" id="form_add">
+                <p id ="file_name" class="card-text mb-auto">
+                    <span class="font-weight-bold">Вид:</span>
+                    {% if prot.Genus %}
+                        {{prot.Genus}}
+                    {% else %}
+                        Не выбран
+                    {% endif %}</p> 
+                <div class="row justify-content-start mt-2">
+                    <div class="col-2">
+                        {% if prot.Genus %}
+                        <a id="chagne_btn" href="" data-toggle="modal" data-target="#genus_user"
+                            class="btn btn-outline-dark btn-xs pull-left add-elem">Изменить
+                        </a>
+                        {% else %}
+                        <a id="chagne_btn" href="" data-toggle="modal" data-target="#genus_user"
+                            class="btn btn-outline-dark btn-xs pull-left add-elem">Выбрать
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div class="tab-content mt-3">
+               
+                <div id="dia" class="tab-pane fade show active " role="tabpanel">
+                    <p class="mb-0">Экземпляры угроз:</p>
+                    <table id="diagn_table" class="table table-striped table-bordered " cellspacing="0"
+                           style="width:100%">
+                        <thead>
+                        <tr>
+                            {% if prot.Genus %}
+                            <a id="diagn_btn" href="" data-toggle="modal" data-target="#threat_user"
+                               class="btn btn-primary btn-xs pull-left add-elem">Добавить
+                            </a>
+                            {% else %}
+                            <a id="diagn_btn" href="" data-toggle="modal" data-target="#threat_user"
+                               class="btn btn-primary btn-xs pull-left add-elem disabled" >Добавить
+                            </a>
+                            {% endif %}
+                            <th>Название</th>
+                            <th>Категория</th>
+                            <th>Угрозы</th>
+                            <th class="text-right">Удалить</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for exemple in exempleChoice%}
+                            <tr>
+                                <td ><div class="mytext" >{{ exemple.Name }}</div></td>
+                                <td><div class="mytext">{{ exemple.Category }}</div></td>
+                                <td><div class="mytext">
+                                    {% for ctg in exemple.List%}
+                                    {{ ctg.Name }}; 
+                                    {% endfor %}
+                                </div></td>
+                                <td class="td-actions text-right">
+                                    <a class="btn btn-danger btn-just-icon btn-sm delete mr-2"
+                                        href="{% url 'protocol_thr_delete' login id exemple.id %}">
+                                        <i class="material-icons">delete</i>
+                                    </a>
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<form id="form_protrocol" class="genus-form" data-db="records" method="POST">
+    <div id="genus_user" class="modal" tabindex="0" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Выбрать вид растения</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body container d-flex flex-column">
+                    {% csrf_token %}
+                    {{choiceGenus}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary" name="createDi">Выбрать</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="form_protrocol" class="threat-form" data-db="records" method="POST">
+    <div id="threat_user" class="modal" tabindex="0" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Добавить угрозу</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body container d-flex flex-column">
+                    {% csrf_token %}
+                    {{ChoiceThreatExemplar}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary" name="createDi">Добавить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<!-- Выполнение обработки -->
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">Поиск</div>
+        <div class="card-body ">
+            <!-- <div class="container">
+                <input type="file" class="form-control" id="customFile" />
+            </div> -->
+            <div class="container">
+                {% if prot.Made == "1" %}
+                <p id="state_alg" class="card-text mb-auto">
+                    <span class="font-weight-bold">Состояние:</span> 
+                        Выполнено</p> 
+                {% else %}
+                    <p id="state_alg" class="card-text mb-auto">
+                        <span class="font-weight-bold">Состояние:</span> 
+                        Не выполнено</p> 
+                {% endif %}
+
+                <div id="alg_progress" class="progress">
+                    <div
+                      id="alg_progress_elem"
+                      class="progress-bar"
+                      role="progressbar"
+                      style="width: 0%"
+                      aria-valuenow="0"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    ></div>
+                </div>
+                
+
+                {% if exempleChoice and prot.Archive %}
+                <div class="row justify-content-center mt-2">
+                    <div class="col-2">
+                        <a id="doit" 
+                            class="btn btn-outline-dark btn-xs pull-left add-elem">Начать поиск
+                        </a>
+                        <a id="nodoit" 
+                            class="btn btn-outline-dark btn-xs pull-left add-elem">Отмена
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="row justify-content-center mt-2">
+                    <div class="col-2">
+                        <a id="doit"
+                        class="btn btn-outline-dark btn-xs pull-left add-elem disabled">Начать поиск
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Результаты -->
+{% if prot.Made == "1" %}
+{% if exempleFind %}
+<div class="pricing-header px-3 py-3 pt-md-4 pb-md-2 mx-auto text-center text-white">
+    <h2 class="display-8 font-weight-bold">Результаты</h2>
+</div>
+{% for exemple in exempleFind %}
+<div class="container mt-3">
+    <div class="card">
+        <div class="card-header">{{exemple.Exemplar.Name}}</div>
+        <div class="card-body mt-1">
+            <div class="tab-content mt-3">
+                <div id="dia" class="tab-pane fade show active " role="tabpanel">
+                    <table id="{{exemple.id}}other_table" class="table table-striped table-bordered " cellspacing="0"
+                           style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Название</th>
+                            <th>Угроза</th>
+                            <th>Категория</th>
+                            <th class="text-right">Открыть</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                
+                                <td ><div class="mytext" >{{ exemple.Exemplar.image }}</div></td>
+                                <td ><div class="mytext" >{{ exemple.Exemplar.Name }}</div></td>
+                                <td><div class="mytext">{{ exemple.Exemplar.Category }}</div></td>
+                               
+
+                                <td class="td-actions text-right">
+                                    <a id="dian_btn" class="btn btn-success btn-just-icon btn-sm btn-xs add-elem"
+                                        href="" data-toggle="modal" data-target="#threat_img{{exemple.id}}" >
+                                        <i class="material-icons">photo_size_select_actual</i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<form id="{{exemple.id}}form_protrocol" class="threat-form" data-db="records" method="POST">
+    <div id="threat_img{{exemple.id}}" class="modal" tabindex="0" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Изображение</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body container d-flex flex-column">
+                    <img class=" d-md-block rounded-right"  alt="{{ exemple.Exemplar.image }}" style="width: 250px; height: 250px;" src="{{ exemple.Exemplar.image.url }}" >
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<style>
+
+    
+    .mytext {
+        margin: 0;
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    body.modal-open {
+        overflow: auto;
+    }
+
+    body.modal-open[style] {
+        padding-right: 0px !important;
+    }
+
+    .modal::-webkit-scrollbar {
+        width: 0 !important;
+        /*removes the scrollbar but still scrollable*/
+        /* reference: http://stackoverflow.com/a/26500272/2259400 */
+    }
+
+    table {
+        width: 100%;
+    }
+
+    #treatment_table_filter {
+        float: right;
+    }
+
+    #other_table_paginate {
+        float: right;
+    }
+
+    #other_table_length {
+        float: left;
+    }
+
+    #other_table_length label {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 15px;
+    }
+
+
+    #other_table_length select {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    #other_table_filter label {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 15px;
+    }
+
+    #other_table_filter input {
+        margin-left: 10px;
+    }
+
+    .add-elem {
+        margin-top: 10px;
+    }
+
+    .back-to-top {
+        cursor: pointer;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: none;
+    }
+</style>
+
+<script>
+
+    $(document).ready(function() {
+        $('#{{exemple.id}}other_table').DataTable({
+            "aLengthMenu": [
+                [5, 10, 25, -1],
+                [5, 10, 25, "All"]
+            ]
+        });
+    });
+
+</script>
+
+{% endfor %}
+{% else %}
+<div class="pricing-header px-3 py-3 pt-md-4 pb-md-2 mx-auto text-center text-white">
+    <h2 class="display-8 font-weight-bold">Угроз не обнаружено</h2>
+</div>
+{% endif %}
+{% endif %}
+
+
+
+
+<style>
+    .mytext {
+        margin: 0;
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+<script>
+
+    $(document).ready(function() {
+        $('#diagn_table').DataTable({
+            "aLengthMenu": [
+                [5, 10, 25, -1],
+                [5, 10, 25, "All"]
+            ]
+        });
+    });
+
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#id_idGenus').select2({
+            dropdownParent: $("#form_add")
+        });
+    });
+
+    $('#file_progress').hide();
+    $('#nodoit').hide();
+    $('#alg_progress').hide();
+    
+
+    $(document).ready(function(){
+    var refreshIntervalId;
+    var refreshIntervalIdDoIt;
+
+    //Загрузка файла
+    $('.file-form').submit(function(e){
+        dd = $('#file_progress_elem');
+        dd.attr('aria-valuenow', "0");
+        dd.attr('style', "width: 0%");
+        $('#file_name').hide();
+        $('#file_progress').show();
+        refreshIntervalId = setInterval(loadFile, 100);
+
+        e.preventDefault();
+        url_add = "{% url 'protocol_file' %}";
+        var formData = new FormData($(this)[0]);
+        $('#file_user').modal('hide');
+        if(url_add !=""){
+            $.ajax({
+                url: url_add,
+                type: 'POST',
+                data: formData,
+                async: false,
+                success: function (data) {
+                    if(data.id == "-1"){
+                        alert("Ошибка загрузки.");
+                    }else {
+                        document.getElementById("file_name").textContent="Архив: "+ data.name;
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+                
+        } else{
+            alert("Error: url not correct");
+        }
+        
+    });
+
+    function loadFile() {
+        dd = $('#file_progress_elem');
+        cd = dd.attr('class');
+        ddi = parseInt(dd.attr('aria-valuenow'));
+        if(ddi==100){
+            $('#file_name').show();
+            $('#file_progress').hide();
+            clearInterval(refreshIntervalId);
+            // location.reload();
+        } else{
+            dd.attr('aria-valuenow', (ddi+10).toString());
+            dd.attr('style', "width: "+(ddi+10).toString()+"%");
+        }
+    }
+
+    //Получение диагноза
+    $(document).delegate('#doit', 'click', function() {
+            $('#state_alg').hide();
+            $('#alg_progress').show();
+            $('#doit').hide();
+            $('#nodoit').show();
+            refreshIntervalIdDoIt = setInterval(doit, 100);
+
+            dd = $('#alg_progress_elem');
+            dd.attr('aria-valuenow', "0");
+            dd.attr('style', "width: 0%");
+
+            id ="{{id}}";
+            url="{% url 'protocol_alg' %}"
+            $.post(url, {id:id, 'csrfmiddlewaretoken': '{{ csrf_token }}'}, function(data) {
+                if(data.id != -1){
+                    
+                } else{
+                   
+                }
+
+            });
+    });
+
+    //Получение диагноза
+    $(document).delegate('#nodoit', 'click', function() {
+            $('#state_alg').show();
+            $('#alg_progress').hide();
+            $('#doit').show();
+            $('#nodoit').hide();
+            clearInterval(refreshIntervalIdDoIt)
+    });
+
+
+    function doit() {
+        
+        dd = $('#alg_progress_elem');
+        cd = dd.attr('class');
+        ddi = parseInt(dd.attr('aria-valuenow'));
+        if(ddi==100){
+            clearInterval(refreshIntervalIdDoIt);
+            location.reload();
+        } else{
+            dd.attr('aria-valuenow', (ddi+1).toString());
+            dd.attr('style', "width: "+(ddi+1).toString()+"%");
+        }
+    }
+
+});
+
+
+
+</script>
+
+<style>
+
+    
+    .mytext {
+        margin: 0;
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    body.modal-open {
+        overflow: auto;
+    }
+
+    body.modal-open[style] {
+        padding-right: 0px !important;
+    }
+
+    .modal::-webkit-scrollbar {
+        width: 0 !important;
+        /*removes the scrollbar but still scrollable*/
+        /* reference: http://stackoverflow.com/a/26500272/2259400 */
+    }
+
+    table {
+        width: 100%;
+    }
+
+    #treatment_table_filter {
+        float: right;
+    }
+
+    #diagn_table_paginate {
+        float: right;
+    }
+
+    #diagn_table_length {
+        float: left;
+    }
+
+    #diagn_table_length label {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 15px;
+    }
+
+
+    #diagn_table_length select {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    #diagn_table_filter label {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 15px;
+    }
+
+    #diagn_table_filter input {
+        margin-left: 10px;
+    }
+
+    .add-elem {
+        margin-top: 10px;
+    }
+
+    .back-to-top {
+        cursor: pointer;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: none;
+    }
+</style>
+{% endblock %}

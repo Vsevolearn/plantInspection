@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Протоколы{% endblock %}
+
+
+{% block content %}
+
+    <div class="d-flex justify-content-center mt-5">
+        <div class="col-md-7 mb-1 mt-1 text-white text-center ">
+            <div class="container">
+                <h1 class="jumbotron-heading">Протоколы</h1>
+                <p class="lead">Страница содержит список всех протоколов.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-3">
+
+        <div class="card">
+            <div class="card-body">
+                <div class="tab-content">
+                    <div id="dia" class="tab-pane fade show active " role="tabpanel">
+                        <table id="diagn_table" class="table table-striped table-bordered " cellspacing="0"
+                               style="width:100%">
+                            <thead>
+                            <tr>
+                                <a id="diagn_btn" href="" data-toggle="modal" data-target="#add_prot"
+                                   class="btn btn-primary btn-xs pull-left add-elem">Создать
+                                </a>
+                                <th>Дата</th>
+                                <th>Адрес</th>
+                                <th>Координаты</th>
+                                <th>Вид</th>
+                                <th>Найдено угроз</th>
+                                <th class="text-right">Действие</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for prot in prots%}
+                                <tr>
+                                    <td ><div class="mytext" >{{ prot.prot.Date }}</div></td>
+                                    <td><div class="mytext">{{ prot.prot.Address }}</div></td>
+                                    <td><div class="mytext">{{ prot.prot.Сoordinates}}</div></td>
+                                    <td><div class="mytext">{{ prot.prot.Genus}}</div></td>
+                                    <td><div class="mytext">{{ prot.num}}</div></td>
+                                    <td class="td-actions text-right">
+                                        <a class="btn btn-danger btn-just-icon btn-sm delete mr-2"
+                                            href="{% url 'protocols_delete' login prot.prot.id %}">
+                                            <i class="material-icons">delete</i>
+                                        </a>
+                                        <a class="btn btn-info btn-just-icon btn-sm"
+                                           href="{% url 'protocol' login prot.prot.id %}">
+                                            <i class="material-icons">edit</i>
+                                        </a>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <form id="form_protrocol" class="add-form" data-db="records" method="POST">
+        <div id="add_prot" class="modal" tabindex="0" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Создать протокол</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body container d-flex flex-column">
+                        {% csrf_token %} 
+                        {{ form }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                        <button type="submit" class="btn btn-primary" name="createDi">Создать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <script>
+
+        $(document).ready(function() {
+            $('#diagn_table').DataTable({
+                "aLengthMenu": [
+                    [5, 10, 25, -1],
+                    [5, 10, 25, "All"]
+                ]
+            });
+        });
+
+    </script>
+    <style>
+
+        
+        .mytext {
+            margin: 0;
+            -webkit-line-clamp: 2;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        body.modal-open {
+            overflow: auto;
+        }
+
+        body.modal-open[style] {
+            padding-right: 0px !important;
+        }
+
+        .modal::-webkit-scrollbar {
+            width: 0 !important;
+            /*removes the scrollbar but still scrollable*/
+            /* reference: http://stackoverflow.com/a/26500272/2259400 */
+        }
+
+        table {
+            width: 100%;
+        }
+
+        #treatment_table_filter {
+            float: right;
+        }
+
+        #diagn_table_paginate {
+            float: right;
+        }
+
+        #diagn_table_length {
+            float: left;
+        }
+
+        #diagn_table_length label {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+
+        #diagn_table_length select {
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
+        #diagn_table_filter label {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        #diagn_table_filter input {
+            margin-left: 10px;
+        }
+
+        .add-elem {
+            margin-top: 10px;
+        }
+
+        .back-to-top {
+            cursor: pointer;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+        }
+    </style>
+{% endblock %}
