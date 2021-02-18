@@ -35,9 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',
+    'core'
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -90,7 +89,7 @@ WSGI_APPLICATION = 'plantInspection.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'plants',
+        'NAME': 'plant1',
         'USER': 'root',
         'PASSWORD': 'root', 
         'HOST': 'localhost',#'127.0.0.1',
